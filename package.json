@@ -1,0 +1,12 @@
+{
+  "name": "snowball-analytics",
+  "version": "1.0.0",
+  "description": "Snowball Analytics - Investment portfolio dashboard tracking compound growth",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "test": "echo \"No tests configured\" && exit 0"
+  },
+  "keywords": ["portfolio", "analytics", "investing", "compound-growth", "dashboard"],
+  "license": "MIT"
+}
