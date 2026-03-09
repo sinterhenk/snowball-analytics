@@ -292,14 +292,19 @@ body {
 .div-value { font-size: 20px; font-weight: 700; color: var(--primary); }
 
 /* ── Goal ── */
-.goal-input-row {
-    display: flex;
-    align-items: center;
+.goal-inputs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 10px;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
+}
+.goal-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 .goal-input-label {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-muted);
     font-weight: 500;
 }
@@ -316,32 +321,52 @@ body {
     color: var(--text-muted);
     font-weight: 600;
 }
+.goal-input-suffix {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 600;
+}
 .goal-input {
     border: none;
     background: none;
     font-size: 14px;
     font-weight: 600;
     color: var(--text);
-    width: 100px;
+    width: 100%;
     padding: 6px 0;
     outline: none;
     font-family: inherit;
 }
+.goal-input-sm { width: 60px; }
 .goal-input::-webkit-inner-spin-button { opacity: 0.3; }
-.goal-progress-row { margin-bottom: 14px; }
-.goal-progress-labels {
+.goal-summary-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 6px;
+    margin-bottom: 10px;
 }
-.goal-current-label { font-size: 12px; color: var(--text-muted); }
-.goal-current-label strong { color: var(--text); }
+.goal-summary-left, .goal-summary-right {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.goal-summary-right { text-align: right; }
+.goal-summary-label { font-size: 11px; color: var(--text-muted); }
+.goal-summary-value { font-size: 20px; font-weight: 700; color: var(--text); }
+.goal-summary-target { color: var(--primary); }
+.goal-summary-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
 .goal-pct-label {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
     color: var(--primary);
 }
+.goal-desc { font-size: 11px; color: var(--text-muted); }
+.goal-progress-row { margin-bottom: 14px; }
 .goal-progress-bar {
     height: 8px;
     background: #e5e7eb;
@@ -354,9 +379,6 @@ body {
     border-radius: 4px;
     transition: width 0.5s ease;
 }
-.goal-info   { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
-.goal-target { font-size: 20px; font-weight: 700; color: var(--primary); }
-.goal-desc   { font-size: 12px; color: var(--text-muted); }
 
 /* ── Buttons ── */
 .btn-icon {
