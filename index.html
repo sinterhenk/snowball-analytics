@@ -162,32 +162,49 @@
             <div class="card card-half">
                 <div class="card-header">
                     <h2>My goal <span class="info-icon">&#9432;</span></h2>
-                    <div class="card-actions">
-                        <button class="btn-pill active">Recent</button>
-                        <button class="btn-pill">Insight</button>
-                        <button class="btn-text">More</button>
+                    <button class="btn-pill active" id="goalSaveBtn">Update</button>
+                </div>
+                <div class="goal-inputs-grid">
+                    <div class="goal-input-group">
+                        <label class="goal-input-label" for="goalInput">Goal target</label>
+                        <div class="goal-input-wrap">
+                            <span class="goal-input-prefix">&euro;</span>
+                            <input type="number" id="goalInput" class="goal-input" value="24000" min="0" step="1000">
+                        </div>
+                    </div>
+                    <div class="goal-input-group">
+                        <label class="goal-input-label" for="goalReturnInput">Annual return</label>
+                        <div class="goal-input-wrap">
+                            <input type="number" id="goalReturnInput" class="goal-input goal-input-sm" value="7" min="0" max="50" step="0.5">
+                            <span class="goal-input-suffix">%</span>
+                        </div>
+                    </div>
+                    <div class="goal-input-group">
+                        <label class="goal-input-label" for="goalMonthlyInput">Monthly addition</label>
+                        <div class="goal-input-wrap">
+                            <span class="goal-input-prefix">&euro;</span>
+                            <input type="number" id="goalMonthlyInput" class="goal-input goal-input-sm" value="0" min="0" step="50">
+                        </div>
                     </div>
                 </div>
-                <div class="goal-input-row">
-                    <label class="goal-input-label" for="goalInput">Target</label>
-                    <div class="goal-input-wrap">
-                        <span class="goal-input-prefix">&euro;</span>
-                        <input type="number" id="goalInput" class="goal-input" value="24000" min="0" step="1000">
+                <div class="goal-summary-row">
+                    <div class="goal-summary-left">
+                        <div class="goal-summary-label">Current value</div>
+                        <div class="goal-summary-value" id="goalCurrentValue">--</div>
                     </div>
-                    <button class="btn-pill active" id="goalSaveBtn">Set</button>
+                    <div class="goal-summary-center">
+                        <span class="goal-pct-label" id="goalPctLabel">--%</span>
+                        <span class="goal-desc" id="goalDesc">-- years</span>
+                    </div>
+                    <div class="goal-summary-right">
+                        <div class="goal-summary-label">Goal</div>
+                        <div class="goal-summary-value goal-summary-target" id="goalTargetDisplay">--</div>
+                    </div>
                 </div>
                 <div class="goal-progress-row">
-                    <div class="goal-progress-labels">
-                        <span class="goal-current-label">Current: <strong id="goalCurrentValue">--</strong></span>
-                        <span class="goal-pct-label" id="goalPctLabel">--%</span>
-                    </div>
                     <div class="goal-progress-bar">
                         <div class="goal-progress-fill" id="goalProgressFill"></div>
                     </div>
-                </div>
-                <div class="goal-info">
-                    <span class="goal-target" id="goalTarget">--</span>
-                    <span class="goal-desc" id="goalDesc">Achievable in -- years</span>
                 </div>
                 <div class="chart-container">
                     <canvas id="goalChart"></canvas>
