@@ -1,0 +1,25 @@
+date,type,ticker,name,shares,price,currency,exchange_rate_to_eur,fees,sector,asset_type,dividend_per_share
+2023-03-15,buy,LSEG.L,LondonStockExchange Infrastructure Partners Inc,10,78.50,GBP,1.14,12.50,Financials,Stock,1.40
+2023-09-22,buy,LSEG.L,LondonStockExchange Infrastructure Partners Inc,5,98.60,GBP,1.16,8.00,Financials,Stock,1.40
+2023-04-10,buy,MUSA,Murphy USA Inc,5,380.00,USD,0.91,9.99,Energy,Stock,1.60
+2023-11-03,buy,MUSA,Murphy USA Inc,3,488.00,USD,0.93,9.99,Energy,Stock,1.60
+2023-02-20,buy,ASML,ASML Holding NV,3,620.00,EUR,1.00,5.00,Information Technology,Stock,6.40
+2024-01-15,buy,ASML,ASML Holding NV,2,770.00,EUR,1.00,5.00,Information Technology,Stock,6.40
+2023-06-12,buy,CPKF.PA,Colas SA,12,115.30,EUR,1.00,7.50,Materials,Stock,4.20
+2023-05-08,buy,BJ,BJ's Wholesale Club Holdings Inc,15,68.20,USD,0.92,9.99,Consumer Discretionary,Stock,0.00
+2024-03-20,buy,BJ,BJ's Wholesale Club Holdings Inc,5,109.40,USD,0.93,9.99,Consumer Discretionary,Stock,0.00
+2023-01-10,buy,SBUX,Starbucks Corp,20,102.30,USD,0.93,9.99,Consumer Discretionary,Stock,2.28
+2023-08-14,buy,SBUX,Starbucks Corp,10,92.50,USD,0.91,9.99,Consumer Discretionary,Stock,2.28
+2024-02-05,sell,SBUX,Starbucks Corp,5,97.80,USD,0.92,9.99,Consumer Discretionary,Stock,2.28
+2023-07-03,buy,NOVO-B.CO,Novo Nordisk,6,680.00,DKK,0.134,15.00,Healthcare,Stock,11.50
+2024-04-18,buy,NOVO-B.CO,Novo Nordisk,4,855.00,DKK,0.134,15.00,Healthcare,Stock,11.50
+2022-12-05,buy,AAPL,Apple Inc,10,145.00,USD,0.95,0.00,Information Technology,Stock,1.00
+2023-10-30,buy,AAPL,Apple Inc,5,170.50,USD,0.92,0.00,Information Technology,Stock,1.00
+2023-03-25,buy,GOOGL,Alphabet Inc,8,140.25,USD,0.91,0.00,Information Technology,Stock,0.80
+2023-05-20,buy,TTE.PA,TotalEnergies SE,20,54.80,EUR,1.00,7.50,Energy,Stock,3.01
+2024-01-08,buy,TTE.PA,TotalEnergies SE,10,65.10,EUR,1.00,7.50,Energy,Stock,3.01
+2023-04-02,buy,RIO.L,Rio Tinto Group,18,55.20,GBP,1.15,12.50,Materials,Stock,3.92
+2022-11-15,buy,KO,Coca-Cola Co,25,58.50,USD,0.97,9.99,Consumer Discretionary,Stock,1.94
+2023-06-28,buy,KO,Coca-Cola Co,15,62.90,USD,0.92,9.99,Consumer Discretionary,Stock,1.94
+2023-08-22,buy,JNJ,Johnson & Johnson,12,155.80,USD,0.91,9.99,Healthcare,Stock,4.76
+2023-02-14,buy,V,Visa Inc,10,275.30,USD,0.93,9.99,Financials,Stock,2.08
