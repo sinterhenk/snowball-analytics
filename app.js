@@ -1,11 +1,17 @@
 // ── Constants ──
 const SECTOR_GRADIENTS = {
     'Consumer Discretionary': '#6366f1, #8b5cf6',
+    'Consumer Staples':       '#84cc16, #22c55e',
     'Energy':                 '#f59e0b, #f97316',
-    'Healthcare':             '#10b981, #14b8a6',
-    'Materials':              '#ec4899, #ef4444',
-    'Information Technology': '#3b82f6, #6366f1',
     'Financials':             '#06b6d4, #3b82f6',
+    'Health Care':            '#10b981, #14b8a6',
+    'Healthcare':             '#10b981, #14b8a6',
+    'Industrials':            '#f97316, #ef4444',
+    'Information Technology': '#3b82f6, #6366f1',
+    'Materials':              '#ec4899, #ef4444',
+    'Real Estate':            '#a78bfa, #ec4899',
+    'Communication Services': '#0ea5e9, #6366f1',
+    'Utilities':              '#facc15, #f59e0b',
     'Cash':                   '#9ca3af, #6b7280',
 };
 
@@ -18,12 +24,18 @@ const TICKER_PAIRS = [
 
 const SECTOR_COLORS = {
     'Consumer Discretionary': '#6366f1',
-    'Energy': '#f59e0b',
-    'Healthcare': '#10b981',
-    'Materials': '#ec4899',
+    'Consumer Staples':       '#84cc16',
+    'Energy':                 '#f59e0b',
+    'Financials':             '#3b82f6',
+    'Health Care':            '#10b981',
+    'Healthcare':             '#10b981',
+    'Industrials':            '#f97316',
     'Information Technology': '#8b5cf6',
-    'Financials': '#3b82f6',
-    'Cash': '#9ca3af',
+    'Materials':              '#ec4899',
+    'Real Estate':            '#a78bfa',
+    'Communication Services': '#0ea5e9',
+    'Utilities':              '#facc15',
+    'Cash':                   '#9ca3af',
 };
 
 const CURRENCY_COLORS = {
@@ -464,36 +476,57 @@ async function init() {
     });
 
     // ── Goal Chart ──
-    const savedGoal = localStorage.getItem('goalTarget');
-    let goalTarget = savedGoal ? parseFloat(savedGoal) : 24000;
-    const goalInput = document.getElementById('goalInput');
-    goalInput.value = goalTarget;
+    const goalInputEl = document.getElementById('goalInput');
+    const goalReturnEl = document.getElementById('goalReturnInput');
+    const goalMonthlyEl = document.getElementById('goalMonthlyInput');
+
+    goalInputEl.value = localStorage.getItem('goalTarget') || 24000;
+    goalReturnEl.value = localStorage.getItem('goalReturn') || 7;
+    goalMonthlyEl.value = localStorage.getItem('goalMonthly') || 0;
 
     let goalChart = null;
 
-    function updateGoal(target) {
-        goalTarget = target;
+    function updateGoal() {
+        const goalTarget = parseFloat(goalInputEl.value) || 24000;
+        const annualReturn = (parseFloat(goalReturnEl.value) || 7) / 100;
+        const monthlyAdd = parseFloat(goalMonthlyEl.value) || 0;
+
         localStorage.setItem('goalTarget', goalTarget);
+        localStorage.setItem('goalReturn', goalReturnEl.value);
+        localStorage.setItem('goalMonthly', goalMonthlyEl.value);
 
         const pct = goalTarget > 0 ? Math.min((totalValue / goalTarget) * 100, 100) : 0;
         document.getElementById('goalCurrentValue').textContent = fmtEur(totalValue);
+        document.getElementById('goalTargetDisplay').textContent = fmtEur(goalTarget);
         document.getElementById('goalPctLabel').textContent = pct.toFixed(1) + '%';
         document.getElementById('goalProgressFill').style.width = pct + '%';
-
-        document.getElementById('goalTarget').textContent = `${fmtEur(goalTarget)} / ${fmtEur(totalValue)}`;
-        const yearsToGoal = totalValue >= goalTarget ? 0 :
-            totalDividends > 0 ? Math.ceil((goalTarget - totalValue) / totalDividends) : 25;
-        document.getElementById('goalDesc').textContent = totalValue >= goalTarget
-            ? 'Goal reached!'
-            : `Achievable in ${Math.max(yearsToGoal, 1)} years`;
 
         const goalYears = [];
         const goalProjected = [];
         const currentYear = new Date().getFullYear();
+        const monthlyReturn = Math.pow(1 + annualReturn, 1/12) - 1;
+        let projected = totalValue;
+        let yearsToGoal = 0;
+        let goalReached = totalValue >= goalTarget;
+
         for (let i = 0; i <= 25; i++) {
             goalYears.push(currentYear + i);
-            goalProjected.push(totalValue * Math.pow(1.07, i));
+            goalProjected.push(projected);
+            if (!goalReached && projected >= goalTarget) {
+                yearsToGoal = i;
+                goalReached = true;
+            }
+            for (let m = 0; m < 12; m++) {
+                projected = projected * (1 + monthlyReturn) + monthlyAdd;
+            }
         }
+
+        if (!goalReached) yearsToGoal = 25;
+        if (totalValue >= goalTarget) yearsToGoal = 0;
+
+        document.getElementById('goalDesc').textContent = totalValue >= goalTarget
+            ? 'Goal reached!'
+            : `~${yearsToGoal} year${yearsToGoal !== 1 ? 's' : ''} to goal`;
 
         if (goalChart) {
             goalChart.data.labels = goalYears;
@@ -541,18 +574,11 @@ async function init() {
         }
     }
 
-    updateGoal(goalTarget);
+    updateGoal();
 
-    document.getElementById('goalSaveBtn').addEventListener('click', () => {
-        const val = parseFloat(goalInput.value);
-        if (val > 0) updateGoal(val);
-    });
-
-    goalInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            const val = parseFloat(goalInput.value);
-            if (val > 0) updateGoal(val);
-        }
+    document.getElementById('goalSaveBtn').addEventListener('click', updateGoal);
+    [goalInputEl, goalReturnEl, goalMonthlyEl].forEach(el => {
+        el.addEventListener('keydown', (e) => { if (e.key === 'Enter') updateGoal(); });
     });
 
     // ── News ──
