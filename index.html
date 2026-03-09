@@ -178,6 +178,23 @@
                         <button class="btn-text">More</button>
                     </div>
                 </div>
+                <div class="goal-input-row">
+                    <label class="goal-input-label" for="goalInput">Target</label>
+                    <div class="goal-input-wrap">
+                        <span class="goal-input-prefix">&euro;</span>
+                        <input type="number" id="goalInput" class="goal-input" value="24000" min="0" step="1000">
+                    </div>
+                    <button class="btn-pill active" id="goalSaveBtn">Set</button>
+                </div>
+                <div class="goal-progress-row">
+                    <div class="goal-progress-labels">
+                        <span class="goal-current-label">Current: <strong id="goalCurrentValue">--</strong></span>
+                        <span class="goal-pct-label" id="goalPctLabel">--%</span>
+                    </div>
+                    <div class="goal-progress-bar">
+                        <div class="goal-progress-fill" id="goalProgressFill"></div>
+                    </div>
+                </div>
                 <div class="goal-info">
                     <span class="goal-target" id="goalTarget">--</span>
                     <span class="goal-desc" id="goalDesc">Achievable in -- years</span>
