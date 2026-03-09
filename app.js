@@ -87,7 +87,6 @@ async function loadCSV() {
 
 function aggregateTransactions(transactions) {
     const holdings = {};
-
     const sorted = [...transactions].sort((a, b) => a.date.localeCompare(b.date));
 
     for (const tx of sorted) {
@@ -252,7 +251,6 @@ async function init() {
 
     const sectorEntries = Object.entries(sectors).sort((a, b) => b[1].value - a[1].value);
 
-    // Donut Chart
     new Chart(document.getElementById('donutChart'), {
         type: 'doughnut',
         data: {
@@ -279,7 +277,6 @@ async function init() {
         }
     });
 
-    // Allocation Table
     const tbody = document.querySelector('#allocationTable tbody');
     sectorEntries.forEach(([sector, data]) => {
         const pct       = (data.value / totalValue * 100).toFixed(1);
@@ -467,56 +464,94 @@ async function init() {
     });
 
     // ── Goal Chart ──
-    const goalTarget = 24000;
-    document.getElementById('goalTarget').textContent = `${fmtEur(goalTarget)} / ${fmtEur(totalValue)}`;
-    const yearsToGoal = totalDividends > 0 ? Math.ceil((goalTarget - totalValue) / totalDividends) : 25;
-    document.getElementById('goalDesc').textContent = `Achievable in ${Math.max(yearsToGoal, 1)} years`;
+    const savedGoal = localStorage.getItem('goalTarget');
+    let goalTarget = savedGoal ? parseFloat(savedGoal) : 24000;
+    const goalInput = document.getElementById('goalInput');
+    goalInput.value = goalTarget;
 
-    const goalYears = [];
-    const goalProjected = [];
-    const goalActual = [];
-    const currentYear = new Date().getFullYear();
-    for (let i = 0; i <= 25; i++) {
-        goalYears.push(currentYear + i);
-        goalProjected.push(totalValue * Math.pow(1.07, i));
-        goalActual.push(i === 0 ? totalValue : null);
+    let goalChart = null;
+
+    function updateGoal(target) {
+        goalTarget = target;
+        localStorage.setItem('goalTarget', goalTarget);
+
+        const pct = goalTarget > 0 ? Math.min((totalValue / goalTarget) * 100, 100) : 0;
+        document.getElementById('goalCurrentValue').textContent = fmtEur(totalValue);
+        document.getElementById('goalPctLabel').textContent = pct.toFixed(1) + '%';
+        document.getElementById('goalProgressFill').style.width = pct + '%';
+
+        document.getElementById('goalTarget').textContent = `${fmtEur(goalTarget)} / ${fmtEur(totalValue)}`;
+        const yearsToGoal = totalValue >= goalTarget ? 0 :
+            totalDividends > 0 ? Math.ceil((goalTarget - totalValue) / totalDividends) : 25;
+        document.getElementById('goalDesc').textContent = totalValue >= goalTarget
+            ? 'Goal reached!'
+            : `Achievable in ${Math.max(yearsToGoal, 1)} years`;
+
+        const goalYears = [];
+        const goalProjected = [];
+        const currentYear = new Date().getFullYear();
+        for (let i = 0; i <= 25; i++) {
+            goalYears.push(currentYear + i);
+            goalProjected.push(totalValue * Math.pow(1.07, i));
+        }
+
+        if (goalChart) {
+            goalChart.data.labels = goalYears;
+            goalChart.data.datasets[0].data = goalProjected;
+            goalChart.data.datasets[1].data = goalYears.map(() => goalTarget);
+            goalChart.update();
+        } else {
+            goalChart = new Chart(document.getElementById('goalChart'), {
+                type: 'line',
+                data: {
+                    labels: goalYears,
+                    datasets: [
+                        {
+                            label: 'Projected',
+                            data: goalProjected,
+                            borderColor: '#6366f1',
+                            backgroundColor: 'rgba(99,102,241,0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 0,
+                        },
+                        {
+                            label: 'Goal',
+                            data: goalYears.map(() => goalTarget),
+                            borderColor: '#ef4444',
+                            borderDash: [5, 5],
+                            pointRadius: 0,
+                            borderWidth: 1.5,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+                        tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${fmtEur(ctx.raw)}` } }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { font: { size: 10 }, maxTicksLimit: 8 } },
+                        y: { ticks: { callback: v => fmtEur(v), font: { size: 10 } }, grid: { color: '#f3f4f6' } }
+                    }
+                }
+            });
+        }
     }
 
-    new Chart(document.getElementById('goalChart'), {
-        type: 'line',
-        data: {
-            labels: goalYears,
-            datasets: [
-                {
-                    label: 'Projected',
-                    data: goalProjected,
-                    borderColor: '#6366f1',
-                    backgroundColor: 'rgba(99,102,241,0.1)',
-                    fill: true,
-                    tension: 0.3,
-                    pointRadius: 0,
-                },
-                {
-                    label: 'Goal',
-                    data: goalYears.map(() => goalTarget),
-                    borderColor: '#ef4444',
-                    borderDash: [5, 5],
-                    pointRadius: 0,
-                    borderWidth: 1.5,
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
-                tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${fmtEur(ctx.raw)}` } }
-            },
-            scales: {
-                x: { grid: { display: false }, ticks: { font: { size: 10 }, maxTicksLimit: 8 } },
-                y: { ticks: { callback: v => fmtEur(v), font: { size: 10 } }, grid: { color: '#f3f4f6' } }
-            }
+    updateGoal(goalTarget);
+
+    document.getElementById('goalSaveBtn').addEventListener('click', () => {
+        const val = parseFloat(goalInput.value);
+        if (val > 0) updateGoal(val);
+    });
+
+    goalInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            const val = parseFloat(goalInput.value);
+            if (val > 0) updateGoal(val);
         }
     });
 
@@ -537,7 +572,6 @@ async function init() {
         </div>
     `).join('');
 
-    // ── Hide loading overlay ──
     document.getElementById('loadingOverlay').classList.add('hidden');
 }
 
